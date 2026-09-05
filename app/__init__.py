@@ -1,7 +1,7 @@
 from flask import Flask
 
 from app.extensions import db, login_manager
-
+from app.routes.auth import auth_bp
 
 def create_app():
 
@@ -17,6 +17,9 @@ def create_app():
     # Initialize extensions
     db.init_app(app)
     login_manager.init_app(app)
+
+    app.register_blueprint(auth_bp)
+    
 
     # Import models
     from app.models.user import User
