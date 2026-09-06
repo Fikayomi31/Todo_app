@@ -1,4 +1,7 @@
+import re
+
 from flask import Blueprint, jsonify, request
+from flask_login import login_required, login_user
 from app.extensions import db
 from app.models.user import User
 
@@ -9,23 +12,84 @@ auth_bp = Blueprint('auth', __name__)
 def register():
     data = request.get_json()
 
-    if not data or not all(k in data for k in ("username", "email", "password")):
-        return jsonify({"error": "Username, email, and password are required"}), 400
+    if not data:
+        return jsonify({
+            "error": "No input data provided"
+        }), 400
 
-    if User.query.filter_by(email=data["email"]).first():
-        return jsonify({"error": "Email already registered"}), 409
+    # Make sure the JSON is an object/dict
+    if not isinstance(data, dict):
+        return jsonify({
+            "error": "Invalid input data format"
+        }), 400
+    
+    # Registration fields
+    username = data.get("username")
+    email = data.get("email")
+    password = data.get("password")
 
-    if User.query.filter_by(username=data["username"]).first():
-        return jsonify({"error": "Username already taken"}), 409
+    username = username.strip() if username else username
+    email = email.strip().lower() if email else email
+    #password = password.strip() if password else password
+    if not username or not email or not password:
+        return jsonify(
+            {"error": "Username, email, and password are required"}
+    ), 400
 
-    user = User(username=data["username"], email=data["email"])
-    user.set_password(data["password"])  # uses the model's own method
+    #  Validate email format
+    email_pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+    if not re.fullmatch(email_pattern, email):
+        return jsonify({
+            "error": "Invalid email format"
+        }), 400
+
+    # Validate password length
+    if len(password) < 8:
+        return jsonify({
+            "error": "Password must be at least 8 characters long"
+        }), 400
+
+    existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+
+    if existing_user:
+        return jsonify({"error": "Username or email already exists"}), 400
+
+    # Create a new user
+    user = User(
+        username=username,
+        email=email
+    )
+    user.set_password(password)
 
     db.session.add(user)
     db.session.commit()
 
     return jsonify({
+        "message": "User registered successfully",
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+        }
+    }), 201
+
+@auth_bp.route('/api/login', methods=["POST"])
+@login_required
+def login():
+    data = request.get_json()
+
+    if not data or not all(k in data for k in ("email", "password")):
+        return jsonify({"error": "Email and password are required"}), 400
+
+    user = User.query.filter_by(email=data["email"]).first()
+
+    if not user or not user.check_password(data["password"]):
+        return jsonify({"error": "Invalid email or password"}), 401
+
+    login_user(user)
+
+    return jsonify({
         "id": user.id,
         "username": user.username,
         "email": user.email
-    }), 201
+    }), 200
