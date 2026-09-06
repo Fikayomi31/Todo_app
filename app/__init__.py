@@ -3,7 +3,7 @@ from flask import Flask
 from app.extensions import db, login_manager
 from app.routes.auth import auth_bp
 
-def create_app():
+def create_app(config=None):
 
     app = Flask(__name__)
 
@@ -13,6 +13,10 @@ def create_app():
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///todo.db"
 
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    # Custom configuration if provided
+    if config:
+        app.config.update(config)
 
     # Initialize extensions
     db.init_app(app)

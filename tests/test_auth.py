@@ -44,7 +44,16 @@ def test_register_duplicate_user(client):
                                "password": "password123"
                            })
     assert response.status_code == 201
+
+    response = client.post('/api/register',
+                           json={
+                               "username": "testuser",
+                               "email": "testuser2@example.com",
+                               "password": "password123"
+                           })
+    assert response.status_code == 400
     data = response.get_json()
+
     assert data["error"] == "Username already exists"
 
 def test_register_duplicate_email(client):
@@ -55,7 +64,16 @@ def test_register_duplicate_email(client):
                                "password": "password123"
                            })
     assert response.status_code == 201
-    data = response.get_json()
+
+    response = client.post('/api/register',
+                           json={
+                               "username": "newuser",
+                               "email": "testuser@example.com",
+                               "password": "password123"
+                           })
+    assert response.status_code == 400
+    data = response.get_json()  
+    
     assert data["error"] == "Email already exists"
 
 def test_register_missing_fields(client):

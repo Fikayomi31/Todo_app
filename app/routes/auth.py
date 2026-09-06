@@ -49,10 +49,13 @@ def register():
             "error": "Password must be at least 8 characters long"
         }), 400
 
-    existing_user = User.query.filter((User.username == username) | (User.email == email)).first()
+    # Check for existing username
+    if User.query.filter_by(username=username).first():
+        return jsonify({"error": "Username already exists"}), 400
 
-    if existing_user:
-        return jsonify({"error": "Username or email already exists"}), 400
+    # Check for existing email
+    if User.query.filter_by(email=email).first():
+        return jsonify({"error": "Email already exists"}), 400
 
     # Create a new user
     user = User(
