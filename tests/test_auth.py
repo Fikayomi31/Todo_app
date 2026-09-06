@@ -95,3 +95,56 @@ def test_register_invalid_email(client):
     assert response.status_code == 400
     data = response.get_json()
     assert data["error"] == "Invalid email format"
+
+def test_login(client):
+    response = client.post('api/register', json={
+        "username": "testuser",
+        "email": "testuser@example.com",
+        "password": "password123"
+    })
+    assert response.status_code == 201
+
+    response = client.post('api/login', json={
+        "email": "testuser@example.com",
+        "password": "password123"
+    })
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["message"] == "Login successful"
+    assert data["user"]["username"] == "testuser"
+    assert data["user"]["email"] == "testuser@example.com"
+
+def test_login_wrong_password(client):
+    response = client.post('api/register', json={
+        "username": "testuser",
+        "email": "testuser@example.com",
+        "password": "password123"
+    })
+    assert response.status_code == 201
+
+    response = client.post('api/login', json={
+        "email": "testuser@example.com",
+        "password": "wrongpassword"
+    })
+    assert response.status_code == 401
+    data = response.get_json()
+    assert data["error"] == "Invalid email or password"
+
+
+def test_login_nonexistent_user(client):
+    response = client.post('api/login', json={
+        "email": "nonexistent@example.com",
+        "password": "password123"
+    })
+    assert response.status_code == 401
+    data = response.get_json()
+    assert data["error"] == "Invalid email or password"
+
+def test_login_missing_fields(client):
+    response = client.post('api/login', json={
+        "email": "testuser@example.com"
+    })
+    assert response.status_code == 400
+    data = response.get_json()
+    assert data["error"] == "Email and password are required"
+    

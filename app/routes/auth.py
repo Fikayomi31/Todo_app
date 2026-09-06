@@ -77,22 +77,45 @@ def register():
     }), 201
 
 @auth_bp.route('/api/login', methods=["POST"])
-@login_required
 def login():
     data = request.get_json()
 
-    if not data or not all(k in data for k in ("email", "password")):
-        return jsonify({"error": "Email and password are required"}), 400
+    if not data:
+        return jsonify({
+            "error": "No input data provided"
+        }), 400
+    if not isinstance(data, dict):
+        return jsonify({
+            "error": "Invalid input data format"
+        }), 400
 
-    user = User.query.filter_by(email=data["email"]).first()
+    email = data.get("email")
+    password = data.get("password")
 
-    if not user or not user.check_password(data["password"]):
-        return jsonify({"error": "Invalid email or password"}), 401
+    if not email or not password:
+        return jsonify({
+            "error": "Email and password are required"
+        }), 400
 
-    login_user(user)
+    email = email.strip().lower()
+    user = User.query.filter_by(email=email).first()
 
+    if not user:
+        return jsonify({
+            "error": "Invalid email or password"
+        }), 401
+    if not user.check_password(password):
+        return jsonify({
+            "error": "Invalid email or password"
+        }), 401
     return jsonify({
-        "id": user.id,
-        "username": user.username,
-        "email": user.email
+        "message": "Login successful",
+        "user": {
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+        }
     }), 200
+
+
+    
