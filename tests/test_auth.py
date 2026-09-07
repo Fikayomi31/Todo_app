@@ -111,6 +111,9 @@ def test_login(client):
     assert response.status_code == 200
     data = response.get_json()
     assert data["message"] == "Login successful"
+    assert "access_token" in data
+    assert data["access_token"]
+
     assert data["user"]["username"] == "testuser"
     assert data["user"]["email"] == "testuser@example.com"
 
@@ -147,4 +150,3 @@ def test_login_missing_fields(client):
     assert response.status_code == 400
     data = response.get_json()
     assert data["error"] == "Email and password are required"
-    
