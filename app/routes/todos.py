@@ -131,3 +131,16 @@ def update_todo(user, todo_id):
             "updated_at": todo.updated_at.isoformat()
         }
     }), 200
+
+@todos_bp.route("/<int:todo_id>", methods=["DELETE"])
+@jwt_required_user()
+def delete_todo(user, todo_id):
+    todo = Todo.query.filter_by(id=todo_id, user_id=user.id).first()
+
+    if not todo:
+        return jsonify({"error": "Todo not found"}), 404
+
+    db.session.delete(todo)
+    db.session.commit()
+
+    return jsonify({"message": "Todo deleted successfully"}), 200

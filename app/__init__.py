@@ -3,6 +3,7 @@ from flask import Flask
 
 from app.extensions import db, login_manager, jwt
 from app.routes.auth import auth_bp
+from app.routes.todos import todos_bp
 
 from dotenv import load_dotenv
 
@@ -30,7 +31,7 @@ def create_app(config=None):
     jwt.init_app(app)
 
     app.register_blueprint(auth_bp)
-    
+    app.register_blueprint(todos_bp)
 
     # Import models
     from app.models.user import User
