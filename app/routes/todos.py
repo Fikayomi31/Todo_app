@@ -138,7 +138,9 @@ def delete_todo(user, todo_id):
     todo = Todo.query.filter_by(id=todo_id, user_id=user.id).first()
 
     if not todo:
-        return jsonify({"error": "Todo not found"}), 404
+        return jsonify(
+            {"error": "Todo not found"}
+        ), 404
 
     db.session.delete(todo)
     db.session.commit()

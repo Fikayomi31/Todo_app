@@ -1,7 +1,7 @@
 from functools import wraps
 
 from flask import request, jsonify
-from flask_jwt_extended import verify_jwt_in_request, get_jwt_identity
+from flask_jwt_extended import verify_jwt_in_request, jwt_required
 
 from app.models.user import User
 
@@ -14,7 +14,7 @@ def jwt_required_user():
         @wraps(func)
         @jwt_required()
         def wrapper(*args, **kwargs):
-            user_id = get_jwt_identity()
+            user_id = jwt_required()
             user = User.query.get(user_id)
             if not user:
                 return jsonify({"error": "User not found"}), 404
