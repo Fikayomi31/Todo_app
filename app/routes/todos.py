@@ -99,7 +99,7 @@ def update_todo(user, todo_id):
         return jsonify({"error": "No input data provided"}), 400
 
     if "title" in data:
-        title = data.get["title"]
+        title = data["title"]
 
         if not isinstance(title, str):
             return jsonify({"error": "Title must be a string"}), 400
@@ -110,7 +110,7 @@ def update_todo(user, todo_id):
 
         todo.title = title
     if "description" in data:
-        description = data.get["description"]
+        description = data["description"]
 
         if not isinstance(description, str):
             return jsonify({"error": "Description must be a string"}), 400
