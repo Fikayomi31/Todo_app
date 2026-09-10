@@ -1,7 +1,7 @@
 import pytest
 
 from app import create_app
-from app.models import db, User, Todo
+from app.models import User, Todo
 from app.extensions import db
 
 @pytest.fixture
@@ -61,4 +61,55 @@ def test_create_todo(client, access_token):
     assert data["todo"]["title"] == "Test Todo"
     assert data["todo"]["description"] == "This is a test todo"
 
+
+"Test to get all todos"
+def test_get_todos(client, access_token):
+    client.post("/api/todos/",
+                json={
+                    "title": "Test Todo",
+                    "description": "This is a test todo"
+                },
+                headers=access_token
+                )
+    client.post("/api/todos/",
+                json={
+                    "title": "Another Test Todo",
+                    "description": "This is another test todo"
+                },
+                headers=access_token
+                )
+    
+    response = client.get("/api/todos/", headers=access_token)
+
+    assert response.status_code == 200
+
+    data = response.get_json()
+
+    assert len(data["todos"]) == 2
+    assert data["count"] == 2
+
+def test_get_todo_by_id(client, access_token):
+    # Create a todo first
+    response = client.post("/api/todos/",
+                           json={
+                               "title": "Test Todo",
+                               "description": "This is a test todo"
+                           },
+                           headers=access_token
+                        )
+    assert response.status_code == 201
+
+    data = response.get_json()
+    todo_id = data["todo"]["id"]
+
+    # Now get the todo by id
+    response = client.get(f"/api/todos/{todo_id}", headers=access_token)
+
+    assert response.status_code == 200
+
+    data = response.get_json()
+
+    assert data["todo"]["id"] == todo_id
+    assert data["todo"]["title"] == "Test Todo"
+    assert data["todo"]["description"] == "This is a test todo"
 
