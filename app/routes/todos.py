@@ -117,7 +117,16 @@ def update_todo(user, todo_id):
 
         todo.description = description
 
+    if "completed" in data:
+        completed = data["completed"]
+
+        if not isinstance(completed, bool):
+            return jsonify({"error": "Completed must be a boolean"}), 400
+
+        todo.completed = completed
+
     db.session.commit()
+
 
     return jsonify({
         "message": "Todo updated successfully",
