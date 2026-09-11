@@ -9,7 +9,7 @@ def app():
     app = create_app({
         "TESTING": True,
         "SQLALCHEMY_DATABASE_URI": "sqlite:///:memory:",
-        "JWT_SECRET_KEY": "test-secret-key",
+        "JWT_SECRET_KEY": "test-secret-key-for-todo-app-testing-2026",
     })
 
     with app.app_context():
@@ -35,17 +35,17 @@ def user(app):
 
 "Testing for Access Token Generation and Authentication"
 @pytest.fixture
-def access_token(client, app):
+def access_token(user, app):
     from flask_jwt_extended import create_access_token
     with app.app_context():
-        token = create_access_token(identity=user.id)
+        token = create_access_token(identity=(str(user.id)))
 
     return {
         "Authorization": f"Bearer {token}"
     }
 
 "Testing for Todo Creation"
-@pytest.fixture
+
 def test_create_todo(client, access_token):
     response = client.post("/api/todos/",
                            json={
@@ -54,6 +54,7 @@ def test_create_todo(client, access_token):
                            },
                            headers=access_token
                         )
+    
     assert response.status_code == 201
 
     data = response.get_json()
@@ -112,4 +113,57 @@ def test_get_todo_by_id(client, access_token):
     assert data["todo"]["id"] == todo_id
     assert data["todo"]["title"] == "Test Todo"
     assert data["todo"]["description"] == "This is a test todo"
+
+
+def test_update_todo(client, access_token):
+    create_response = client.post("/api/todos/",
+                                json={
+                               "title": "Test Todo",
+                               "description": "This is a test todo"
+                           },
+                           headers=access_token
+                        )
+
+    todo_id = create_response.get_json()["todo"]["id"]
+
+    response = client.put(f"/api/todos/{todo_id}",
+                    json={
+                        "title": "Updated Test Todo",
+                        "description": "This is an updated test todo",
+                        "completed": True
+                    },
+                    headers=access_token
+                )
+    assert response.status_code == 200
+
+    data = response.get_json()
+
+    assert data["message"] == "Todo updated successfully"
+    assert data["todo"]["title"] == "Updated Test Todo"
+    assert data["todo"]["description"] == "This is an updated test todo"
+    assert data["todo"]["completed"] == True
+
+def test_delete_todo(client, access_token):
+    create_response = client.post("/api/todos/",
+                                json={
+                               "title": "Test Todo",
+                               "description": "This is a test todo"
+                           },
+                           headers=access_token
+                        )
+
+    todo_id = create_response.get_json()["todo"]["id"]
+
+    response = client.delete(f"/api/todos/{todo_id}", headers=access_token)
+
+    assert response.status_code == 200
+
+    data = response.get_json()
+
+    assert data["message"] == "Todo deleted successfully"
+
+    # Verify that the todo is actually deleted
+    get_response = client.get(f"/api/todos/{todo_id}", headers=access_token)
+    assert get_response.status_code == 404
+
 
