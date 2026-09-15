@@ -1,11 +1,45 @@
-function App() {
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50">
-      <h1 className="text-5xl font-bold text-blue-600">
-        TaskFlow
-      </h1>
-    </div>
-  )
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+
+function Login() {
+  return <h1>Login</h1>
 }
 
-export default App
+function Register() {
+  return <h1>Register</h1>
+}
+
+function Dashboard() {
+  return <h1>Dashboard</h1>
+}
+
+function Tasks() {
+  return <h1>Tasks</h1>
+}
+
+function Profile() {
+  return <h1>Profile</h1>
+}
+
+function Settings() {
+  return <h1>Settings</h1>
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/tasks" element={<Tasks />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/settings" element={<Settings />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
