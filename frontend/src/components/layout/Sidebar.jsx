@@ -49,8 +49,9 @@ function Sidebar({ isOpen, onClose }) {
                         Workspace
                     </p>
                     <div className="space-y-1">
-                        {navigation.map((item) => (
-                            const Icon = item.icon
+                        {navigation.map((item) => {
+                            const Icon = item.icon;
+
                             return (
                                 <button key={item.name}
                                     className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition
@@ -70,12 +71,51 @@ function Sidebar({ isOpen, onClose }) {
                                         </span>
                                     )}
                                 </button>
-                            )}
+                            )
+                        })}
+                    </div>
+
+                    <p className="mb-3 mt-8 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                        Preferences
+
+                    </p>
+                    <button className="flex w-full items-center gap-3 rounded-xl px-3 py-3
+                        text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
+                            <Settings size={19} strokewidth={1.8} />
+                            <span>Settings</span>
+
+                    </button>
+                </nav>
+
+                {/* Profile /Logout */}
+                <div className="boarder-t boarder-slate-100 p-4">
+                    <div className="flex items-center gap3 rounded-xl p-2">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 font-semibold text-blue-600">
+                            F
+
+                        </div>
+                        <div className="min-w-0 flex-1">
+                            <p className="truncate text-sm font-semibold text-slate-900">
+                                Fikayo
+                            </p>
+                            <p className="truncate text-xs text-slate-500">
+                                Personal Account
+                            </p>
+                        </div>
+                        <button className="rounded-lg p2 text-slate-400 transition hover:bg-slate-100 hover:text-red-500"
+                            aria-label="Logout"
+                        >
+                            <Logout size={18} />
+
+                        </button>
 
                     </div>
-                </nav>
+
+                </div>
 
             </aside>
         </>
     )
 }
+
+export default Sidebar;
