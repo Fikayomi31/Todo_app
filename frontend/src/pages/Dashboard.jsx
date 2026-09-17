@@ -104,7 +104,51 @@ function Dashboard() {
                 })}
 
             </div>
+            
+            {/* Recent Tasks */}
+            <div className="mt-8 rounded-2xl border border-slate-200 bg-whitw shadow-sm">
+                <div className="flex flex-col gap-4 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 className="font-semibold text-slate-900">
+                            Recent Tasks
+                        </h2>
+
+                        <p className="mt-1 text-sm text-slate-500">
+                            Here are your recent tasks.
+                        </p>
+                    </div>
+                    <buton className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white
+                        transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        <Plus size={18} />
+                        Add Task
+
+                    </buton>
+                </div>
+                {/* Empty state for now */}
+                <div className="flex min-h-64 flex-col items-center justify-center px-5 py-12 twxt-center">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-slate-400">
+                        <ListTodo size={26} />  
+                    </div>
+                    <h3 className="mt-4 font-semibold text-slate-900">
+                        No tasks yet
+
+                    </h3>
+                    <p className="mt-1 max-w-sm text-sm text-slate-500">
+                        Get started by adding a new task.
+
+
+                    </p>
+                    <button className="mt-5 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5
+                        text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                    >
+                        <Plus size={17} />
+                        Add Task
+                    </button>
+                </div>
+            </div>
 
         </div>
     )
 }
+
+export default Dashboard
