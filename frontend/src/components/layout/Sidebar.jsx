@@ -7,13 +7,15 @@ import {
   LogOut,
   X,
 } from "lucide-react";
+import { NavLink } from "react-router-dom";
+
 
 function Sidebar({ isOpen, onClose }) {
   const navigation = [
-    { name: "Dashboard", icon: LayoutDashboard, active: true },
-    { name: "My Tasks", icon: ListTodo },
-    { name: "Completed", icon: CheckCircle2 },
-    { name: "Pending", icon: Clock3 },
+    { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
+    { name: "My Tasks", icon: ListTodo, path: "/tasks" },
+    { name: "Completed", icon: CheckCircle2, path: "/completed" },
+    { name: "Pending", icon: Clock3, path: "/pending" },
   ];
 
   return (
@@ -60,14 +62,20 @@ function Sidebar({ isOpen, onClose }) {
               const Icon = item.icon;
 
               return (
-                <button
+                <NavLink
                   key={item.name}
-                  className={`flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition ${
-                    item.active
-                      ? "bg-blue-50 text-blue-600"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                  }`}
+                  to={item.path}
+                  onClick={onClose} 
+                  className={({ isActive}) =>
+                    `flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition 
+                  ${
+                      isActive 
+                        ? "bg-blue-50 text-blue-600" 
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    }
+                  `}
                 >
+
                   <Icon size={19} strokeWidth={1.8} />
                   <span>{item.name}</span>
 
@@ -76,7 +84,7 @@ function Sidebar({ isOpen, onClose }) {
                       12
                     </span>
                   )}
-                </button>
+                </NavLink>
               );
             })}
           </div>
@@ -84,10 +92,19 @@ function Sidebar({ isOpen, onClose }) {
           <p className="mb-3 mt-8 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
             Preferences
           </p>
-          <button className="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-slate-600 transition hover:bg-slate-50 hover:text-slate-900">
+          <NavLink to="/settings" onClick={onClose} 
+          className={({ isActive }) => 
+            `flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition 
+                  ${
+                      isActive 
+                        ? "bg-blue-50 text-blue-600" 
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    }
+                  `}
+          > 
             <Settings size={19} strokeWidth={1.8} />
             <span>Settings</span>
-          </button>
+          </NavLink>
         </nav>
 
         {/* Profile / Logout */}

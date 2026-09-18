@@ -1,4 +1,5 @@
 import { Search, Bell, Plus, CheckCircle2, Clock3, ListTodo, TrendingUp } from "lucide-react";
+import DashboardLayout from "../components/layout/DashboardLayout";
 
 
 function Dashboard() {
@@ -26,7 +27,8 @@ function Dashboard() {
     ]
 
     return (
-        <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <DashboardLayout>
+            <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
             {/* Header */}
             <div className="flex flex-col gap-5 md:flex-row md:itens-center md:justify-between">
                 <div>
@@ -147,7 +149,9 @@ function Dashboard() {
                 </div>
             </div>
 
-        </div>
+            </div>
+        </DashboardLayout>
+        
     )
 }
 

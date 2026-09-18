@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 
-function ProtectedRoute({children}) => {
+function ProtectedRoute({children}) {
     const token = localStorage.getItem("access_token")
 
     if (!token) {
