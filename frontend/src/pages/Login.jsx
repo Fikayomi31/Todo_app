@@ -1,12 +1,36 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import PasswordInput from '../components/common/PasswordInput';
+import { checkCircle2 } from 'lucide-react';
+
 function Login() {
+
+    const [formData, setFormData] = useState({username: '', password: ''});
+
+    const [rememberMe, setRememberMe] = useState(false);
+    const handleChange = (e) => {
+        const {name, value} = e.target;
+        setFormData(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log("Login data", formData)
+    }
+
     return (
-        <div className="fixed min-h screen items-center justify-center bg-slate-50">
-            <h1 className="text-3xl font-bold text-slate-900">
-                Login Page
-            </h1>
+        <main className="flex min-h-screen bg-slate-50">
+            {/* Left side */}
 
-        </div>
+            <section>
+                
+            </section>
+
+        </main>
     )
-}
 
-export default Login
+    
+}
