@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import DashboardLayout from "./components/layout/DashboardLayout";
 import Login from "./pages/Login";
-//import Register from "./pages/Register";
+import Register from "./pages/Register";
 import Tasks from "./pages/Tasks";
 import Pending from "./pages/Pending";
 import Completed from "./pages/Completed";
@@ -14,6 +14,7 @@ function App() {
     <BrowserRouter>
     <Routes>
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
       <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
       <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
