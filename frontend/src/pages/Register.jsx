@@ -5,7 +5,7 @@ import PasswordInput from '../components/common/PasswordInput';
 function Register() {
     const [formData, setFormData] = useState({username: '', email: '', password: '', confirmPassword: ''});
 
-    const handleChange = (e) => {
+    const handleInputChange = (e) => {
         const {name, value} = e.target;
         setFormData(prevState => ({
             ...prevState,
@@ -83,7 +83,7 @@ function Register() {
                             />
                         </div>
                            
-                     \  {/* Email */}
+                        {/* Email */}
                         <div>
                             <label htmlFor="email" className="mb-2 block text-sm font-medium text-slate-700">
                                 Email
