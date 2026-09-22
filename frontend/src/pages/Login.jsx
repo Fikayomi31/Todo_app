@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PasswordInput from '../components/common/PasswordInput';
 import { CheckCircle2 } from 'lucide-react';
 import useAuthStore from '../store/authStore';
