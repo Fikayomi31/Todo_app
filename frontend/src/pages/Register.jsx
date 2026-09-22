@@ -1,20 +1,47 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PasswordInput from '../components/common/PasswordInput';
+import useAuthStore from '../store/authStore';
+
 
 function Register() {
+
+    const navigate = useNavigate();
+    const { register, loading, error, clearError } = useAuthStore();
     const [formData, setFormData] = useState({username: '', email: '', password: '', confirmPassword: ''});
 
     const handleInputChange = (e) => {
         const {name, value} = e.target;
-        setFormData(prevState => ({
-            ...prevState,
+
+        clearError()
+
+
+        setFormData(previous => ({
+            ...previous,
             [name]: value
         }));
     }
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
+
         e.preventDefault();
-        console.log("Register data", formData)
+        if (formData.password !== formData.confirmPassword) {
+            return
+        }
+        const result = await register(
+            formData.username,
+            formData.email,
+            formData.password
+        )
+
+        if (result.success) {
+            navigate('/dashboard', {
+                replace: true,
+                state: {
+                    message: "Registration successful! ",
+                }
+            });
+        }
+        
     }
 
     return (
@@ -64,6 +91,11 @@ function Register() {
 
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-6">
+                        {error && (
+                            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                                {error}
+                            </div>
+                        )}
                         {/* Username */}
                         <div>
                             <label htmlFor="username" className="mb-2 block text-sm font-medium text-slate-700">
@@ -127,6 +159,11 @@ function Register() {
                                 required
                             />
                         </div>
+                        {formData.confirmPassword && formData.password !== formData.confirmPassword && (
+                            <p className="mt-2 text-sm text-red-600">
+                                Passwords do not match.
+                            </p>
+                        )}
 
                         {/* Terms */}
                         <label className="flex items-start gap-3">
@@ -140,11 +177,16 @@ function Register() {
 
                         {/* Submit */}
                         <button type="submit"
+                            disabled={
+
+                                loading ||
+                                formData.password !== formData.confirmPassword
+                            }
                             className="h-12 w-full rounded-xl bg-blue-600 text-sm font-semibold text-white
                                 transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-500/20
                             "
                         >
-                            Create Account
+                            {loading ? "Creating account..." : "Create account"}
                         </button>
 
                     </form>
