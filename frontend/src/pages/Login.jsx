@@ -2,22 +2,37 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import PasswordInput from '../components/common/PasswordInput';
 import { CheckCircle2 } from 'lucide-react';
+import useAuthStore from '../store/authStore';
 
 function Login() {
+
+    const { login, loading, error, clearError } = useAuthStore();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({username: '', password: ''});
 
     const [rememberMe, setRememberMe] = useState(false);
-    const handleChange = (e) => {
+    const handleChange = async (e) => {
         const {name, value} = e.target;
-        setFormData(prevState => ({
-            ...prevState,
+        clearError()
+
+        setFormData(previous => ({
+            ...previous,
             [name]: value
         }));
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+
+        const result = await login(
+            formData.username,
+            formData.password
+        )
+
+        if (result.success) {
+            navigate('/dashboard', {replace: true});
+        }
         console.log("Login data", formData)
     }
 
@@ -82,6 +97,13 @@ function Login() {
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-5">
                         {/* Username */}
+
+                        {error && (
+                            <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 test-sm text-red-600">
+                                {error}
+                            </div>
+                        )}
+
                         <div>
                             <label htmlFor='username' className="mb-2 block text-sm font-medium text-slate-700">
                                 Username
@@ -124,10 +146,11 @@ function Login() {
 
                         {/* Submit */}
                         <button type="submit"
+                            disabled={loading}
                             className="h-12 w-full rounded-xl bg-blue-600 text-sm font-semibold text-white
                             transition hover:bg-blue focus:outline-none focus:ring-4 focus:ring-blue-500/20"
                         >
-                            Sign in
+                            {loading ? "Signing in..." : "Sign in"}
                         </button>
                     </form>
 
