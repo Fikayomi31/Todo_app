@@ -43,8 +43,7 @@ const useAuthStore = create((set) => ({
             }
 
         } catch (error) {
-            console.log("Login Status:", error.response?.status)
-            console.log("Login Data:", error.response?.data)
+            console.error("Login error:", error);
             const message =
                 error.response?.data?.error ||
                 error.response?.data?.message ||
@@ -61,47 +60,37 @@ const useAuthStore = create((set) => ({
             }
         }
     },
-
     register: async (username, email, password) => {
-        set({
-            loading: true,
-            error: null,
-        })
+        set({ loading: true, error: null })
         try {
             const response = await api.post("/register", {
                 username,
                 email,
                 password,
-                
             })
+
+            
+            const { access_token, user } = response.data;
+
+            if (access_token) {
+                localStorage.setItem("token", access_token);
+            }
+
             set({
+                user: user || null,
+                token: access_token || null,
+                isAuthenticated: true, 
                 loading: false,
                 error: null,
-
             })
+
             return {
                 success: true,
                 data: response.data,
             }
         } catch (error) {
-            console.log("Registration Status:", error.response?.status)
-            console.log("Registration Data:", error.response?.data)
-
-            const message =
-                error.response?.data.error ||
-                error.response?.data.message ||
-                "Registration failed. Please try again"
-
-            set({
-                loading: false,
-                error: message,
-            })
-
-            return {
-                success: false,
-                error: message,
-            }
-
+            console.error("Registration error:", error);
+            
         }
     },
 
