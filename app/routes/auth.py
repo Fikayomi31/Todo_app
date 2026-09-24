@@ -80,6 +80,7 @@ def register():
 @auth_bp.route('/api/login', methods=["POST"])
 def login():
     data = request.get_json()
+    print("Received payload:", data)  # Debug line 1
 
     if not data:
         return jsonify({
@@ -100,6 +101,7 @@ def login():
 
     email = email.strip().lower()
     user = User.query.filter_by(email=email).first()
+    print("Found user in DB:", user)
 
     if not user:
         return jsonify({

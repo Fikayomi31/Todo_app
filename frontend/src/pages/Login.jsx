@@ -9,7 +9,7 @@ function Login() {
     const { login, loading, error, clearError } = useAuthStore();
     const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({username: '', password: ''});
+    const [formData, setFormData] = useState({email: '', password: ''});
 
     const [rememberMe, setRememberMe] = useState(false);
     const handleChange = async (e) => {
@@ -26,8 +26,8 @@ function Login() {
         e.preventDefault();
 
         const result = await login(
-            formData.username,
-            formData.password
+           formData.email,
+           formData.password
         )
 
         if (result.success) {
@@ -96,8 +96,7 @@ function Login() {
                         </p>
                     </div>
                     <form onSubmit={handleSubmit} className="space-y-5">
-                        {/* Username */}
-
+                        {/* Email */}
                         {error && (
                             <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 test-sm text-red-600">
                                 {error}
@@ -105,11 +104,11 @@ function Login() {
                         )}
 
                         <div>
-                            <label htmlFor='username' className="mb-2 block text-sm font-medium text-slate-700">
-                                Username
+                            <label htmlFor='email' className="mb-2 block text-sm font-medium text-slate-700">
+                                Email
                             </label>
-                            <input id="username" name="username" type="text" value={formData.username}
-                                onChange={handleChange} placeholder="Enter your username" required
+                            <input id="email" name="email" type="text" value={formData.email}
+                                onChange={handleChange} placeholder="Enter your email" required
                                 className="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm text-slate-900
                                     outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10
                                 "
@@ -120,7 +119,7 @@ function Login() {
                                 <label htmlFor="password" className="text-sm font-medium text-slate-700">
                                     Password
                                 </label>
-                                
+
                                 <button type="button"
                                     className="text-sm font-medium text-blue-600 hover:text-blue-700"
                                 >
