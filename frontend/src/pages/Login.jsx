@@ -117,9 +117,10 @@ function Login() {
                         </div>
                         <div>
                             <div className="mb-2 flex items-center justify-between">
-                                <lable htmlFor="password" className="text-sm font-medium text-slate-700">
+                                <label htmlFor="password" className="text-sm font-medium text-slate-700">
                                     Password
-                                </lable>
+                                </label>
+                                
                                 <button type="button"
                                     className="text-sm font-medium text-blue-600 hover:text-blue-700"
                                 >

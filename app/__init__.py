@@ -4,6 +4,7 @@ from flask import Flask
 from app.extensions import db, login_manager, jwt
 from app.routes.auth import auth_bp
 from app.routes.todos import todos_bp
+from flask_cors import CORS
 
 from dotenv import load_dotenv
 
@@ -13,11 +14,22 @@ def create_app(config=None):
 
     app = Flask(__name__)
 
+    CORS(
+        app,
+        resources={
+            r"/api/*": {
+                "origins": "http://localhost:5173"
+            }
+        }
+    )
+
+    
+   
+
     # Configuration
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///todo.db"
-
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # Custom configuration if provided
@@ -34,6 +46,7 @@ def create_app(config=None):
     app.register_blueprint(todos_bp)
 
     # Import models
+
     from app.models.user import User
     from app.models.todo import Todo
 

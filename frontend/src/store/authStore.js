@@ -43,6 +43,8 @@ const useAuthStore = create((set) => ({
             }
 
         } catch (error) {
+            console.log("Login Status:", error.response?.status)
+            console.log("Login Data:", error.response?.data)
             const message =
                 error.response?.data?.error ||
                 error.response?.data?.message ||
@@ -66,7 +68,7 @@ const useAuthStore = create((set) => ({
             error: null,
         })
         try {
-            const response = await api.post("register", {
+            const response = await api.post("/register", {
                 username,
                 email,
                 password,
@@ -82,6 +84,9 @@ const useAuthStore = create((set) => ({
                 data: response.data,
             }
         } catch (error) {
+            console.log("Registration Status:", error.response?.status)
+            console.log("Registration Data:", error.response?.data)
+
             const message =
                 error.response?.data.error ||
                 error.response?.data.message ||
