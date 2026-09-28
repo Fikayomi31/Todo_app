@@ -43,7 +43,7 @@ function Dashboard() {
                         Stay organized and get things done today.
                     </p>
                 </div>
-                <div className="felx-items-center gap-3">
+                <div className="flex-items-center gap-3">
                     {/* Search bar */}
                     <div className="relative hidden sm:block">
                         <Search size={18}

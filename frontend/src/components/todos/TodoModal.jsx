@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 
-function TodoModel({isOpen, onClose, onSubmit, todo=null}) {
+function TodoModal({isOpen, onClose, onSubmit, todo=null}) {
 
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
@@ -134,5 +134,5 @@ function TodoModel({isOpen, onClose, onSubmit, todo=null}) {
     )
 }
 
-export default TodoModel
+export default TodoModal
 
