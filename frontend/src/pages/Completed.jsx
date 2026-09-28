@@ -13,7 +13,7 @@ function Completed() {
 
     const [editingTodo, setEditingTodo] = useState(null)
     const [deleteTodo, setDeleteTodo] = useState(null)
-    const [deletingTodo, setDeletingTodo] = useState(false)
+    const [deleting, setDeleting] = useState(false)
 
     const completedTodos = todos.filter((todo) => todo.Completed)
 
@@ -39,7 +39,7 @@ function Completed() {
             await removeTodo(deleteTodo.id)
             setDeleteTodo(null)
         } finally {
-            setDeletingTodo(false)
+            setDeleting(false)
         }
     }
 
@@ -67,11 +67,11 @@ function Completed() {
 
                 {/* Todos list */}
                 <div className="mt-7">
-                    <P className="text-sm text-slate-500">
+                    <p className="text-sm text-slate-500">
                         {completedTodos.length}{" "}
                         {completedTodos.length === 1 ? "task" : "tasks"} completed
 
-                    </P>
+                    </p>
 
                 </div>
 
