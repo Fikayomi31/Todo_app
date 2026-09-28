@@ -19,7 +19,7 @@ function Tasks() {
     const [editingTodo, setEditingTodo] = useState(null)
 
     const [deleteTodo, setDeleteTodo] = useState(null)
-    const [deleting, SetDeleting] = useState(false)
+    const [deleting, setDeleting] = useState(false)
 
     const filteredTodos = useMemo(() => {
         let result = [...todos]
@@ -32,7 +32,7 @@ function Tasks() {
         }
 
         if (search.trim()) {
-            const query = search.toLowerCase()
+            const query = search.trim().toLowerCase()
 
             result = result.filter(
                 (todo) =>
@@ -43,14 +43,16 @@ function Tasks() {
 
         if (sort === "alphabetical") {
             result.sort((a, b) =>
-                a.title.localCompare(b.title)
+                a.title.localeCompare(b.title)
             )
-        }
-        if (sort === "oldest") {
+        } else if (sort === "oldest") {
             result.sort((a, b) =>
-                new Date(a.created_at) -
-                new Date(b.created_at)
+                new Date(a.created_at) - new Date(b.created_at)
             )
+        } else if (sort === "newest") {
+            result.sort((a, b) => 
+                new Date(b.created_at) - new Date(a.created_at)
+            ) 
         }
         return result
     }, [todos, filter, search, sort])
@@ -76,7 +78,7 @@ function Tasks() {
         if (!deleteTodo) return
 
         try {
-            SetDeleting(true)
+            setDeleting(true)
             await removeTodo(deleteTodo.id)
             setDeleteTodo(null)
         } finally {
@@ -180,8 +182,9 @@ function Tasks() {
 
                 {/* Error */}
                 {error && (
-                    <div className="mt-5 rounded-xl border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
-                        {error}                    </div>
+                    <div className="mt-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                        {error}                    
+                    </div>
 
                 )}
 
@@ -247,16 +250,14 @@ function Tasks() {
                 )}
 
                 {/* Create/Edit Modal */}
-                <TodoCard isOpen={modalOpen}
+               
+                <TodoModal
+                    isOpen={modalOpen}
                     onClose={() => {
                         setModalOpen(false)
                         setEditingTodo(null)
                     }}
-                    onSubmit={
-                        editingTodo
-                            ? handleEdit
-                            : handleCreate
-                    }
+                    onSubmit={editingTodo ? handleEdit : handleCreate}
                     todo={editingTodo}
                 />
 
