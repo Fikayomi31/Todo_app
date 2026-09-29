@@ -5,18 +5,42 @@ import {
   Clock3,
   Settings,
   LogOut,
+  UserRound,
   X,
 } from "lucide-react";
-import { NavLink } from "react-router-dom";
-
+import { NavLink, useNavigate } from "react-router-dom";
+import useAuthStore from "../../store/authStore";
 
 function Sidebar({ isOpen, onClose }) {
+
+  const navigate = useNavigate();
+  const user = useAuthStore((state) => state.user);
+  const logout = useAuthStore((state) => state.logout);
+
+  const displayName = user?.full_name || user?.name || user?.username || "TaskFlow User";
+
+  const initial = displayName.charAt(0).toUpperCase();
+  
   const navigation = [
     { name: "Dashboard", icon: LayoutDashboard, path: "/dashboard" },
     { name: "My Tasks", icon: ListTodo, path: "/tasks" },
     { name: "Completed", icon: CheckCircle2, path: "/completed" },
     { name: "Pending", icon: Clock3, path: "/pending" },
   ];
+
+  const linkClass = ({ isActive }) =>
+    `flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition
+    ${
+      isActive
+        ? "bg-blue-50 text-blue-600"
+        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+    }`;
+    const handleLogout = () => {
+      logout();
+      onClose?.();
+      navigate("/login", { replace: true });
+
+    };
 
   return (
     <>
@@ -43,7 +67,7 @@ function Sidebar({ isOpen, onClose }) {
               TaskFlow
             </span>
           </div>
-          <button
+          <button type="button"
             onClick={onClose}
             className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 lg:hidden"
             aria-label="Close sidebar"
@@ -66,64 +90,65 @@ function Sidebar({ isOpen, onClose }) {
                   key={item.name}
                   to={item.path}
                   onClick={onClose} 
-                  className={({ isActive}) =>
-                    `flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition 
-                  ${
-                      isActive 
-                        ? "bg-blue-50 text-blue-600" 
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                    }
-                  `}
+                  className={linkClass} 
+                  
                 >
 
                   <Icon size={19} strokeWidth={1.8} />
                   <span>{item.name}</span>
-
-                  {item.name === "My Tasks" && (
-                    <span className="ml-auto rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-400">
-                      12
-                    </span>
-                  )}
                 </NavLink>
               );
             })}
           </div>
 
           <p className="mb-3 mt-8 px-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
-            Preferences
+            Account
           </p>
-          <NavLink to="/settings" onClick={onClose} 
-          className={({ isActive }) => 
-            `flex w-full items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium transition 
-                  ${
-                      isActive 
-                        ? "bg-blue-50 text-blue-600" 
-                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
-                    }
-                  `}
-          > 
-            <Settings size={19} strokeWidth={1.8} />
-            <span>Settings</span>
-          </NavLink>
+          <div className="space-y-1">
+             <NavLink 
+                to="/profile" 
+                onClick={onClose} 
+                className={linkClass}
+          
+              > 
+                <UserRound size={19} strokeWidth={1.8} />
+                <span>Profile</span>
+              </NavLink>
+
+              <NavLink
+                to="/settings"
+                onClick={onClose}
+                className={linkClass}
+              >
+                <Settings size={19} strokeWidth={1.8} />
+                <span>Settings</span>
+
+              </NavLink>
+
+          </div>
+         
         </nav>
 
         {/* Profile / Logout */}
         <div className="border-t border-slate-100 p-4">
           <div className="flex items-center gap-3 rounded-xl p-2">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 font-semibold text-blue-600">
-              F
+              {initial}
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-semibold text-slate-900">
-                Fikayo
+                {displayName}
               </p>
               <p className="truncate text-xs text-slate-500">
-                Personal Account
+                {user?.email || "Personal Account"}
               </p>
             </div>
             <button
+              type="button"
+              onClick={handleLogout}
               className="rounded-lg p-2 text-slate-400 transition hover:bg-slate-100 hover:text-red-500"
               aria-label="Logout"
+              title="Logout"
             >
               <LogOut size={18} />
             </button>
