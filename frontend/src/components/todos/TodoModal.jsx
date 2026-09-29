@@ -41,7 +41,7 @@ function TodoModal({isOpen, onClose, onSubmit, todo=null}) {
     }
 
     return (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slack-950/40 px-4">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/40 px-4">
             <div className="w-full max-w-md rounded-2xl border border-slate-200 bg-white shadow-xl">
                 {/* Header */}
                 <div className="flex items-center justify-between border-b border-slate-100 p-5">
@@ -49,12 +49,12 @@ function TodoModal({isOpen, onClose, onSubmit, todo=null}) {
                         <h2 className="text-lg font-semibold text-slate-900">
                             {todo ? "Edit Todo" : "Create Todo"}
                         </h2>
-                        <P className="mt-1 text-sm text-slate-500">
+                        <p className="mt-1 text-sm text-slate-500">
                             {todo
                                 ? "Update the details of your task."
                                 : "Add something you want to accomplish."
                             }
-                        </P>
+                        </p>
                     </div>
                     <button onClick={onClose} 
                         className="rounded-lg p-2 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
@@ -112,7 +112,7 @@ function TodoModal({isOpen, onClose, onSubmit, todo=null}) {
                         </button>
                         <button
                             type="submit"
-                            disabled={submitting || title.trim()}
+                            disabled={submitting || !title.trim()}
                             className="rounded-xl bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700
                                 disabled:opacity-50 disabled:cursor-not-allowed
                             "

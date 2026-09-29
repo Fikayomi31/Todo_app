@@ -82,7 +82,7 @@ function Tasks() {
             await removeTodo(deleteTodo.id)
             setDeleteTodo(null)
         } finally {
-            SetDeleting(false)
+            setDeleting(false)
         }
     }
 

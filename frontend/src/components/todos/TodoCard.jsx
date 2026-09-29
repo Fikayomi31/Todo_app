@@ -34,7 +34,7 @@ function TodoCard({todo, onToggle, onEdit, onDelete}) {
                 {/* Content */}
                 <div className="min-w-0 flex-1">
                     <h3 className={`font-semibold ${todo.completed
-                        ? "trxt-slate-400 line-through"
+                        ? "text-slate-400 line-through"
                         : "text-slate-900"
                         }`}
                     >
@@ -48,7 +48,7 @@ function TodoCard({todo, onToggle, onEdit, onDelete}) {
                                 : "text-slate-500"
                         }`}
                         >
-                            {todo.descriptiom}
+                            {todo.description}
                         </p>
                     )}
 
@@ -66,8 +66,7 @@ function TodoCard({todo, onToggle, onEdit, onDelete}) {
                 </div>
 
                 {/* Actions */}
-                <div className="flex-shrink-0 gap-1 opacity-100 transition 
-                    sm:opacity-0 sm:group-hover:opacity-100"
+                <div className="flex shrink-0 items-center gap-1"
                 >
                     <button onClick={() => onEdit(todo)}
                         className="rounded-lg p-2 text-slate-400

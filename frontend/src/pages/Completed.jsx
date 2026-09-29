@@ -127,8 +127,8 @@ function Completed() {
                 <TodoModal
                     isOpen={Boolean(editingTodo)}
                     onClose={() => setEditingTodo(null)}
+                    onSubmit={handleEdit}
                     todo={editingTodo}
-                    onEdit={handleEdit}
                 />
                 {/* Delete Todo Modal */}
                 <DeleteModal
