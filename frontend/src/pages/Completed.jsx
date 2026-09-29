@@ -15,7 +15,7 @@ function Completed() {
     const [deleteTodo, setDeleteTodo] = useState(null)
     const [deleting, setDeleting] = useState(false)
 
-    const completedTodos = todos.filter((todo) => todo.Completed)
+    const completedTodos = todos.filter((todo) => todo.completed)
 
     const handleToggle = async (todo) => {
         await editTodo(todo.id, {
@@ -91,6 +91,7 @@ function Completed() {
                         ))}
                     </div>
                 )}
+                
 
                 {/* Completed tasks */}
                 {!loading && completedTodos.length > 0 && (
