@@ -1,16 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { UserRound, LockKeyhole, Bell, Save } from "lucide-react";
 
+import { getSettings, updateSettings } from "../services/todoService";
+import useAuthStore from "../store/authStore";
 import DashboardLayout from "../components/layout/DashboardLayout";
 
 function Settings() {
+    const updateAuthUser = useAuthStore((state) => state.updateAuthUser);
     const [profile, setProfile] = useState({
         name: "",
         email: "",
-    })
+    });
 
-    const [notifications, setNotifications] = useState(true)
-    const [message, setMessage] = useState("")
+    const [notifications, setNotifications] = useState(true);
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+    const [error, setError] = useState("");
+
+    useEffect(() => {
+        const loadSettings = async () => {
+            try {
+                setLoading(true);
+                setError("");
+
+                const data = await getSettings();
+
+                setProfile({
+                    username: data.username || "",
+                    email: data.email || "",
+                });
+                setNotifications(data.notifications_enabled ?? true)
+            } catch (err) {
+                setError(
+                    err.response?.data?.error ||
+                        "Unable to load your settings. Please try again."
+                );
+            } finally {
+                setLoading(false)
+            }
+        };
+        loadSettings();
+    }, []);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -18,12 +50,57 @@ function Settings() {
             ...previous,
             [name]: value
         }))
-    }
+        setMessage("");
+    };
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        setMessage("Settings saved successfully!")
-    }
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        setSaving(true);
+        setMessage("");
+        setError("");
+
+        try {
+            const response = await updateSettings({
+                username: profile.username.trim(),
+                email: profile.email.trim(),
+                notifications_enabled: notifications,
+            });
+
+            const savedUser = response.user;
+
+            setProfile({username: savedUser.username, email: savedUser.email});
+
+            setNotifications(savedUser.notifications_enabled)
+
+            // Update saved user in Zustand and local Storage.
+            updateAuthUser?.({
+                ...useAuthStore.getState().user,
+                ...savedUser,
+            });
+
+            setMessage(response.message || "Settings save successful.")
+
+
+        } catch (err) {
+            setError(
+                err.response?.data?.error ||
+                    "Unable to save settings. Please try again."
+            );
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <DashboardLayout>
+                <div className="mx-auto max-w-4xl rounded-2xl border border-slate-200 bg-white p-8 text-sm text-slate-500">
+                    Loading settings...
+                </div>
+            </DashboardLayout>
+        )
+    };
 
 
     return (
@@ -118,7 +195,10 @@ function Settings() {
                                 </div>
                                 <input type="checkbox"
                                     checked={notifications}
-                                    onChange={(e) => setNotifications(e.target.checked)}
+                                    onChange={(e) => {
+                                        setNotifications(e.target.checked);
+                                        setMessage("");
+                                    }}
                                     className="h-5 w-5 accent-indigo-600"
                                 />
                             </label>
@@ -145,22 +225,31 @@ function Settings() {
 
                         </p>
                     </section>
-                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        {message && (
-                            <p className="text-sm text-emerald-600" role="status">
-                                {message}
-                            </p>
-                        )
-                        }
-                        <button type="submit"
+
+                    {error && (
+                        <p className="text-sm text-red-600" role="alert">
+                            {error}
+                        </p>
+                    )}
+
+                    {message && (
+                        <p className="text-sm text-emerald-600" role="status">
+                            {message}
+                        </p>
+                    )}
+
+                    <div className="flex justify-end">
+                        <button
+                            type="submit"
+                            disabled={saving}
                             className="inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold
-                                text-white transition hover:bg-indigo-700"
+                                text-white transition hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-60"
                         >
                             <Save size={17} />
-                            Save preferences
+                            {saving ? "Saving...": "Save settings"}
                         </button>
-
                     </div>
+                   
 
                 </form>
 
