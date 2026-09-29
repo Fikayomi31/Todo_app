@@ -141,3 +141,83 @@ def me():
         "username": user.username,
         "email": user.email
     }), 200
+
+@auth_bp.route('/api/settings', methods=["GET"])
+@jwt_required()
+def get_settings():
+    current_user_id = get_jwt_identity()
+    user = db.session.get(User, int(current_user_id))
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    return jsonify({
+        "username": user.username,
+        "email": user.email,
+        "notification_enabled": user.notification_enabled
+    }), 200
+
+@auth_bp.route('/api/settings', methods=["PUT"])
+@jwt_required()
+def update_settings():
+    current_user_id = get_jwt_identity()
+    user = db.session.get(User, int(current_user_id))
+
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+
+    data = request.get_json()
+
+    if not isinstance(data, dict):
+        return jsonify({"error": "Invalid input data format"}), 400
+
+    username = data.get("username")
+    email = data.get("email")
+    notification_enabled = data.get("notification_enabled")
+
+    if not username or not email:
+        return jsonify({"error": "Username and email are required"}), 400
+
+    user.username = username.strip()
+    user.email = email.strip().lower()
+
+    if not username:
+        return jsonify({"error": "Username cannot be empty"}), 400
+
+    email_pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+    if not re.fullmatch(email_pattern, user.email):
+        return jsonify({"error": "Invalid email format"}), 400
+
+    if not isinstance(notification_enabled, bool):
+        return jsonify({"error": "notification_enabled must be a boolean"}), 400
+
+    existing_user = User.query.filter(
+        User.email == user.email, 
+        User.id != user.id
+    ).first()
+
+    if existing_user:
+        return jsonify({"error": "Username already exists"}), 400
+
+    existing_email = User.query.filter(
+        User.email == user.email, 
+        User.id != user.id
+    ).first()
+
+    if existing_email:
+        return jsonify({"error": "Email already exists"}), 400
+
+    user.username = username
+    user.email = email
+    user.notification_enabled = notification_enabled
+
+    db.session.commit()
+
+    return jsonify({
+        "message": "Settings updated successfully",
+        "user": {
+            "username": user.username,
+            "email": user.email,
+            "notification_enabled": user.notification_enabled
+        }
+    }), 200

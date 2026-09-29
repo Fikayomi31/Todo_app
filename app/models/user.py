@@ -15,7 +15,9 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(255), nullable=False)  # widened
     created_at = db.Column(db.DateTime, default=lambda: datetime.now(UTC))
     is_active = db.Column(db.Boolean, default=True)
+    notification_enabled = db.Column(db.Boolean, nullable=False, default=True)
     todos = db.relationship("Todo", backref="user", lazy=True, cascade="all, delete-orphan")
+
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)

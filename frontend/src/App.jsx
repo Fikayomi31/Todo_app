@@ -9,6 +9,9 @@ import Pending from "./pages/Pending";
 import Completed from "./pages/Completed";
 import Settings from "./pages/Settings";
 import ProtectedRoute from "./routes/ProtectedRoute";
+import Profile from "./pages/Profile";
+
+
 function App() {
   return (
     <BrowserRouter>
@@ -20,6 +23,7 @@ function App() {
       <Route path="/tasks" element={<ProtectedRoute><Tasks /></ProtectedRoute>} />
       <Route path="/pending" element={<ProtectedRoute><Pending /></ProtectedRoute>} />
       <Route path="/completed" element={<ProtectedRoute><Completed /></ProtectedRoute>} />
+      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
       <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/dashboard" replace />} />
     </Routes>
