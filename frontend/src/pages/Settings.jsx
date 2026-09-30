@@ -8,7 +8,7 @@ import DashboardLayout from "../components/layout/DashboardLayout";
 function Settings() {
     const updateAuthUser = useAuthStore((state) => state.updateAuthUser);
     const [profile, setProfile] = useState({
-        name: "",
+        username: "",
         email: "",
     });
 
@@ -30,7 +30,7 @@ function Settings() {
                     username: data.username || "",
                     email: data.email || "",
                 });
-                setNotifications(data.notifications_enabled ?? true)
+                setNotifications(data.notification_enabled ?? true)
             } catch (err) {
                 setError(
                     err.response?.data?.error ||
@@ -59,19 +59,19 @@ function Settings() {
         setSaving(true);
         setMessage("");
         setError("");
-
+        
         try {
             const response = await updateSettings({
                 username: profile.username.trim(),
                 email: profile.email.trim(),
-                notifications_enabled: notifications,
+                notification_enabled: notifications,
             });
 
             const savedUser = response.user;
 
             setProfile({username: savedUser.username, email: savedUser.email});
 
-            setNotifications(savedUser.notifications_enabled)
+            setNotifications(savedUser.notification_enabled)
 
             // Update saved user in Zustand and local Storage.
             updateAuthUser?.({
@@ -91,7 +91,7 @@ function Settings() {
             setSaving(false);
         }
     };
-
+    
     if (loading) {
         return (
             <DashboardLayout>
@@ -140,9 +140,9 @@ function Settings() {
                                 >
                                     Full Name
                                 </label>
-                                <input id="name"
-                                    name="name"
-                                    value={profile.name}
+                                <input id="username"
+                                    name="username"
+                                    value={profile.username}
                                     onChange={handleChange}
                                     placeholder="Enter your full name"
                                     className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm outline-none focus:border-indigo-500

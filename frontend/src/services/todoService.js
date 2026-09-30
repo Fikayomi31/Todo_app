@@ -21,11 +21,11 @@ export const deleteTodo = async (todoId) => {
 }
 
 export const getSettings = async () => {
-    const response = await api.get("/settings/");
+    const response = await api.get("/settings");
     return response.data;
 }
 
 export const updateSettings = async (settingsData) => {
-    const response = await api.put("/settings/", settingsData);
+    const response = await api.put("/settings", settingsData);
     return response.data;
 }
