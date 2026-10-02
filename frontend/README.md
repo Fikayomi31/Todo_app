@@ -1,29 +1,24 @@
 # TaskFlow — Frontend
 
-TaskFlow is a modern task management application built with React and Vite. The frontend provides an intuitive interface for managing personal tasks, tracking completed and pending work, and managing account settings.
+A modern task management web application built with React and Vite. TaskFlow provides users with an intuitive interface for creating, organizing, tracking, and managing their tasks.
 
-The frontend communicates with the TaskFlow Flask REST API for authentication, task management, and user settings.
+## Home Page
+
+![TaskFlow Home Page](./todo_pic.png)
 
 ## Features
 
-* User registration and login
-* JWT-based authentication
-* Protected application routes
-* Dashboard
-* Create tasks
-* Edit tasks
-* Delete tasks
-* View all tasks
-* View pending tasks
-* View completed tasks
-* User profile
-* Account settings
-* Update username and email
-* Notification preference management
-* Responsive sidebar navigation
-* Mobile-friendly layout
-* Loading, error, and success states
-* Persistent authentication using local storage
+- User registration and login
+- JWT-based authentication
+- Protected application routes
+- Dashboard
+- Create, edit, and delete tasks
+- Pending and completed task views
+- User profile
+- Account settings
+- Responsive design
+- Mobile-friendly navigation
+- Persistent authentication
 
 ## Tech Stack
 
