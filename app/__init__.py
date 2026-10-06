@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+import gunicorn
 
 from app.extensions import db, login_manager, jwt
 from app.routes.auth import auth_bp
