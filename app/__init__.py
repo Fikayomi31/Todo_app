@@ -19,7 +19,7 @@ def create_app(config=None):
     # Frontend URL
     frontend_url = os.getenv(
         "FRONTEND_URL",
-        "http://localhost:5173"
+        
     )
 
     CORS(
