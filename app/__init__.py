@@ -29,7 +29,7 @@ def create_app(config=None):
     # Configuration
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
     app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///todo.db"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # Custom configuration if provided
